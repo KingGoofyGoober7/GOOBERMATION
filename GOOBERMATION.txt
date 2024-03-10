@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Animation Software</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #87CEEB, #00008B);
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden; /* To hide overflowing text */
+        }
+
+        canvas {
+            border: 1px solid #000;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+
+        #frameControls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        #frameControls button {
+            font-size: 16px;
+            padding: 5px 10px;
+        }
+
+        #modeIcons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modeIcons span {
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        #modeIcons span:hover {
+            color: blue;
+        }
+
+        #brushSizeContainer {
+            display: flex;
+            align-items: center;
+        }
+
+        #brushSizeInput {
+            width: 40px;
+            margin-left: 5px;
+            text-align: center;
+        }
+
+        #colorPickerContainer {
+            display: flex;
+            align-items: center;
+        }
+
+        #colorPickerContainer input[type="color"] {
+            margin-left: 5px;
+        }
+
+        #titleContainer {
+            position: relative;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            animation: rotateAnimation 10s infinite linear, moveUpAnimation 5s infinite alternate; /* 10s rotation, infinite loop; 5s upward movement, infinite loop */
+        }
+
+        @keyframes rotateAnimation {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes moveUpAnimation {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .titleText {
+            color: white;
+            text-shadow: 2px 2px 2px black;
+        }
+    </style>
+</head>
+<body>
+    <div id="titleContainer">
+        <span class="titleText">GOOBERMATION</span>
+    </div>
+
+    <div>
+        <button onclick="addFrame()">Add Frame</button>
+        <button onclick="deleteFrame()">Delete Frame</button>
+        <button onclick="duplicateFrame()">D</button>
+        <button onclick="playAnimation()">Play</button>
+        <input type="number" id="fpsInput" placeholder="FPS">
+        <button onclick="setFPS()">Set FPS</button>
+    </div>
+    <div id="frameControls">
+        <button onclick="prevFrame()">←</button>
+        <canvas id="animationCanvas" width="450" height="225"></canvas>
+        <button onclick="nextFrame()">→</button>
+    </div>
+    <div id="modeIcons">
+        <span onclick="setMode('draw')">P</span>
+        <span onclick="setMode('erase')">E</span>
+        <span onclick="setMode('duplicate')">D</span>
+        <div id="brushSizeContainer">
+            <div>Brush Size:</div>
+            <input type="number" id="brushSizeInput" value="5" min="1" max="100" oninput="setBrushSize()">
+        </div>
+        <div id="colorPickerContainer">
+            <div>Pen Color:</div>
+            <input type="color" id="penColor" value="#000000" onchange="setPenColor()">
+        </div>
+        <button onclick="undoDrawing()">U</button>
+        <button onclick="redoDrawing()">R</button>
+    </div>
+
+    <script>
+        let frames = [];
+        let currentFrame = 0;
+        let drawing = false;
+        let fps = 10; // Default FPS
+        let playing = false;
+        let drawMode = 'draw'; // 'draw' or 'erase'
+        let brushSize = 5;
+        let penColor = '#000000'; // Default color is black
+        let undoStack = [];
+
+        const canvas = document.getElementById('animationCanvas');
+        const ctx = canvas.getContext('2d');
+        const brushSizeInput = document.getElementById('brushSizeInput');
+        const penColorInput = document.getElementById('penColor');
+
+        function addFrame() {
+            clearFrame();
+            frames.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            currentFrame = frames.length - 1;
+            drawFrame();
+        }
+
+        function deleteFrame() {
+            if (frames.length > 1) {
+                frames.splice(currentFrame, 1);
+                if (currentFrame >= frames.length) {
+                    currentFrame = frames.length - 1;
+                }
+                drawFrame();
+            }
+        }
+
+        function duplicateFrame() {
+            const duplicatedFrame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            frames.splice(currentFrame + 1, 0, duplicatedFrame);
+            currentFrame++;
+            drawFrame();
+        }
+
+        function clearFrame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawFrame() {
+            ctx.putImageData(frames[currentFrame], 0, 0);
+        }
+
+        function startDrawing(e) {
+            drawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            ctx.beginPath();
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+
+            const x = e.clientX - canvas.offsetLeft;
+            const y = e.clientY - canvas.offsetTop;
+
+            ctx.lineWidth = brushSize;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = penColor;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+
+            frames[currentFrame] = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            drawFrame();
+        }
+
+        function playAnimation() {
+            playing = true;
+            let frameIndex = 0;
+
+            function playNextFrame() {
+                if (frameIndex < frames.length) {
+                    ctx.putImageData(frames[frameIndex], 0, 0);
+                    currentFrame = frameIndex;
+                    frameIndex++;
+                    setTimeout(playNextFrame, 1000 / fps); // Adjust the delay based on FPS
+                } else {
+                    playing = false;
+                }
+            }
+
+            playNextFrame();
+        }
+
+        function setFPS() {
+            const fpsInput = document.getElementById('fpsInput');
+            fps = parseInt(fpsInput.value, 10) || fps;
+            alert(`FPS set to ${fps}`);
+        }
+
+        function prevFrame() {
+            if (currentFrame > 0) {
+                currentFrame--;
+                drawFrame();
+            }
+        }
+
+        function nextFrame() {
+            if (currentFrame < frames.length - 1) {
+                currentFrame++;
+                drawFrame();
+            }
+        }
+
+        function setMode(mode) {
+            drawMode = mode;
+        }
+
+        function setBrushSize() {
+            brushSize = parseInt(brushSizeInput.value, 10) || brushSize;
+        }
+
+        function setPenColor() {
+            penColor = penColorInput.value;
+        }
+
+        function undoDrawing() {
+            if (undoStack.length > 0) {
+                frames[currentFrame] = undoStack.pop();
+                drawFrame();
+            }
+        }
+
+        function redoDrawing() {
+            if (undoStack.length > 0) {
+                undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+                frames[currentFrame] = undoStack.pop();
+                drawFrame();
+            }
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        addFrame(); // Initial frame
+
+        // You can add more features or customize the code based on your needs.
+    </script>
+</body>
+</html>
