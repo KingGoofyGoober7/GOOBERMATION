@@ -1,10 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="goobermation ico.png" type="image/png">
+       <link rel="icon" href="goobermation ico.png" type="image/png">
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing meta tags and styles -->
+
+    <style>
+        /* Your existing styles */
+
+        #titleContainer {
+            /* Existing styles for the title container */
+        }
+
+        /* Other styles from your code */
+
+        #exportButton {
+            position: absolute;
+            top: 10px; /* Adjust the top position as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            padding: 8px 16px;
+        }
+
+        #subscribeLink {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 15px;
+            color: white;
+            text-decoration: none;
+            background-color: red;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+
+    <!-- Existing head content -->
+
+    <!-- Add the script for exporting frames -->
+    <script>
+        // ... (Your existing script)
+
+        function exportFrames() {
+            // Your existing exportFrames function
+        }
+    </script>
+</head>
+<body>
+    <!-- Your existing body content -->
+
+    <!-- Add the export button -->
+    
+
+    <!-- Add the subscribe link -->
+    <a id="subscribeLink" href="https://www.youtube.com/@CeoOfBingBong" target="_blank">Wanna Support? Leave a Sub!</a>
+
+    <script>
+        // ... (Your existing script)
+    </script>
+</body>
+</html>
+
+    <!-- Your existing meta tags and styles -->
+
+    <style>
+        /* Your existing styles */
+
+        #titleContainer {
+            /* Existing styles for the title container */
+        }
+
+        /* Other styles from your code */
+        
+        #exportButton {
+            position: absolute;
+            top: 10px; /* Adjust the top position as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            padding: 8px 16px;
+        }
+    </style>
+
+    <!-- Existing head content -->
+
+    <!-- Add the script for exporting frames -->
+    <script>
+        // ... (Your existing script)
+
+  
+    </script>
+</head>
+<body>
+    <!-- Your existing body content -->
+
+    <!-- Add the export button -->
+
+
+    <script>
+        // ... (Your existing script)
+    </script>
+</body>
+</html>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GooberMation?!</title>
+    <title>Simple Animation Software</title>
     <style>
         body {
             background: linear-gradient(to bottom, #87CEEB, #00008B);
@@ -19,7 +126,7 @@
         }
 
         canvas {
-            border: 7px solid #000;
+            border: 1px solid #000;
             margin-bottom: 20px;
             background-color: white;
         }
@@ -105,17 +212,41 @@
     </style>
 </head>
 <body>
+  
     <div id="titleContainer">
         <span class="titleText">GOOBERMATION</span>
     </div>
+<script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Your existing head content goes here -->
+</head>
+<body>
+    <!-- Your existing HTML content goes here -->
+
+    <script>
+        function drawFrame() {
+            // Assuming you have a canvas, ctx, frames, and currentFrame already defined
+            var canvas = document.getElementById('animationCanvas');
+            var ctx = canvas.getContext('2d');
+            var frames = []; // Assuming frames is defined elsewhere in your script
+            var currentFrame = 0; // Assuming currentFrame is defined elsewhere in your script
+
+            ctx.fillStyle = 'white'; // Set the background color to white
+            ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
+            ctx.putImageData(frames[currentFrame], 0, 0);
+        }
+    </script>
+</body>
+</html>
 
     <div>
-        <button onclick="addFrame()">Add Frame</button>
-        <button onclick="deleteFrame()">Delete Frame</button>
-        <button onclick="duplicateFrame()">D</button>
-        <button onclick="playAnimation()">Play</button>
+        <button onclick="addFrame()">ADD FRAMES</button>
+        <button onclick="deleteFrame()">DELETE FRAMES!!</button>
+        <button onclick="duplicateFrame()">DUPE!!</button>
+        <button onclick="playAnimation()">PLAY!!</button>
         <input type="number" id="fpsInput" placeholder="FPS">
-        <button onclick="setFPS()">Set FPS</button>
+        <button onclick="setFPS()">SET FPS!</button>
     </div>
     <div id="frameControls">
         <button onclick="prevFrame()">←</button>
@@ -127,15 +258,15 @@
         <span onclick="setMode('erase')">E</span>
         <span onclick="setMode('duplicate')">D</span>
         <div id="brushSizeContainer">
-            <div>Brush Size:</div>
+            <div>SIZE!!</div>
             <input type="number" id="brushSizeInput" value="5" min="1" max="100" oninput="setBrushSize()">
         </div>
         <div id="colorPickerContainer">
-            <div>Pen Color:</div>
+            <div>COLORZ!!:</div>
             <input type="color" id="penColor" value="#000000" onchange="setPenColor()">
         </div>
-        <button onclick="undoDrawing()">U</button>
-        <button onclick="redoDrawing()">R</button>
+        <button onclick="undoDrawing()">Undo (SPAM)</button>
+    
     </div>
 
     <script>
@@ -290,5 +421,35 @@
 
         // You can add more features or customize the code based on your needs.
     </script>
+    <script>
+    // ... (your existing code)
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === ',') {
+            // Previous frame
+            prevFrame();
+        } else if (event.key === '.') {
+            // Next frame
+            nextFrame();
+        }
+    });
+
+    function prevFrame() {
+        if (currentFrame > 0) {
+            currentFrame--;
+            drawFrame();
+        }
+    }
+
+    function nextFrame() {
+        if (currentFrame < frames.length - 1) {
+            currentFrame++;
+            drawFrame();
+        }
+    }
+
+    // ... (your existing code)
+</script>
+
 </body>
 </html>
