@@ -1,117 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-       <link rel="icon" href="goobermation ico.png" type="image/png">
+<link rel="icon" href="goobermation ico.png" type="image/png">
   <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Your existing meta tags and styles -->
+<style>
+#subscribeButton {
+  position: fixed;
+  bottom: 10px;
+  right: 20px; /* Increased right value */
+  background-color: red;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  animation: hoverUpDown 2s infinite alternate;
+  font-size: 12px;
+}
 
-    <style>
-        /* Your existing styles */
-
-        #titleContainer {
-            /* Existing styles for the title container */
-        }
-
-        /* Other styles from your code */
-
-        #exportButton {
-            position: absolute;
-            top: 10px; /* Adjust the top position as needed */
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 18px;
-            padding: 8px 16px;
-        }
-
-        #subscribeLink {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 15px;
-            color: white;
-            text-decoration: none;
-            background-color: red;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-    </style>
-
-    <!-- Existing head content -->
-
-    <!-- Add the script for exporting frames -->
-    <script>
-        // ... (Your existing script)
-
-        function exportFrames() {
-            // Your existing exportFrames function
-        }
-    </script>
+@keyframes hoverUpDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+</style>
 </head>
 <body>
-    <!-- Your existing body content -->
 
-    <!-- Add the export button -->
-    
+<button id="subscribeButton" onclick="window.open('https://www.youtube.com/@CeoOfBingBong', '_blank')">SUBSCRIBE TO MY CHANNEL!</button>
 
-    <!-- Add the subscribe link -->
-    <a id="subscribeLink" href="https://www.youtube.com/@CeoOfBingBong" target="_blank">Wanna Support? Leave a Sub!</a>
-
-    <script>
-        // ... (Your existing script)
-    </script>
 </body>
 </html>
 
-    <!-- Your existing meta tags and styles -->
-
-    <style>
-        /* Your existing styles */
-
-        #titleContainer {
-            /* Existing styles for the title container */
-        }
-
-        /* Other styles from your code */
-        
-        #exportButton {
-            position: absolute;
-            top: 10px; /* Adjust the top position as needed */
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 18px;
-            padding: 8px 16px;
-        }
-    </style>
-
-    <!-- Existing head content -->
-
-    <!-- Add the script for exporting frames -->
-    <script>
-        // ... (Your existing script)
-
-  
-    </script>
-</head>
-<body>
-    <!-- Your existing body content -->
-
-    <!-- Add the export button -->
-
-
-    <script>
-        // ... (Your existing script)
-    </script>
-</body>
-</html>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goobermation!!</title>
+    <title>Simple Animation Software</title>
     <style>
         body {
             background: linear-gradient(to bottom, #87CEEB, #00008B);
@@ -209,6 +139,18 @@
             color: white;
             text-shadow: 2px 2px 2px black;
         }
+
+        #transparencyContainer {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #transparencyContainer input[type="number"] {
+            margin-left: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -216,29 +158,6 @@
     <div id="titleContainer">
         <span class="titleText">GOOBERMATION</span>
     </div>
-<script><!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- Your existing head content goes here -->
-</head>
-<body>
-    <!-- Your existing HTML content goes here -->
-
-    <script>
-        function drawFrame() {
-            // Assuming you have a canvas, ctx, frames, and currentFrame already defined
-            var canvas = document.getElementById('animationCanvas');
-            var ctx = canvas.getContext('2d');
-            var frames = []; // Assuming frames is defined elsewhere in your script
-            var currentFrame = 0; // Assuming currentFrame is defined elsewhere in your script
-
-            ctx.fillStyle = 'white'; // Set the background color to white
-            ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas with the background color
-            ctx.putImageData(frames[currentFrame], 0, 0);
-        }
-    </script>
-</body>
-</html>
 
     <div>
         <button onclick="addFrame()">ADD FRAMES</button>
@@ -265,8 +184,11 @@
             <div>COLORZ!!:</div>
             <input type="color" id="penColor" value="#000000" onchange="setPenColor()">
         </div>
-        <button onclick="undoDrawing()">Undo (SPAM)</button>
-    
+        <div id="transparencyContainer">
+            Transparency: <input type="number" id="transparencyInput" value="100" min="0" max="100" onchange="setTransparency()">
+        </div>
+        <button onclick="undoDrawing()">UNDO</button>
+        <button onclick="redoDrawing()">REDO</button>
     </div>
 
     <script>
@@ -279,11 +201,13 @@
         let brushSize = 5;
         let penColor = '#000000'; // Default color is black
         let undoStack = [];
+        let redoStack = [];
 
         const canvas = document.getElementById('animationCanvas');
         const ctx = canvas.getContext('2d');
         const brushSizeInput = document.getElementById('brushSizeInput');
         const penColorInput = document.getElementById('penColor');
+        const transparencyInput = document.getElementById('transparencyInput');
 
         function addFrame() {
             clearFrame();
@@ -326,6 +250,7 @@
             drawing = false;
             ctx.beginPath();
             undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            redoStack = []; // Clear redo stack when a new drawing action is performed
         }
 
         function draw(e) {
@@ -336,7 +261,7 @@
 
             ctx.lineWidth = brushSize;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = penColor;
+            ctx.strokeStyle = `rgba(${hexToRgb(penColor)}, ${parseFloat(transparencyInput.value) / 100})`;
 
             ctx.lineTo(x, y);
             ctx.stroke();
@@ -393,21 +318,27 @@
             brushSize = parseInt(brushSizeInput.value, 10) || brushSize;
         }
 
+        function setTransparency() {
+            drawFrame(); // Redraw frame to apply transparency
+        }
+
         function setPenColor() {
             penColor = penColorInput.value;
+            drawFrame(); // Redraw frame to apply new color
         }
 
         function undoDrawing() {
             if (undoStack.length > 0) {
+                redoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height)); // Add current state to redo stack
                 frames[currentFrame] = undoStack.pop();
                 drawFrame();
             }
         }
 
         function redoDrawing() {
-            if (undoStack.length > 0) {
-                undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-                frames[currentFrame] = undoStack.pop();
+            if (redoStack.length > 0) {
+                undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height)); // Add current state to undo stack
+                frames[currentFrame] = redoStack.pop();
                 drawFrame();
             }
         }
@@ -420,36 +351,20 @@
         addFrame(); // Initial frame
 
         // You can add more features or customize the code based on your needs.
+        
+        // Utility function to convert hex color to RGB
+        function hexToRgb(hex) {
+            hex = hex.replace(/^#/, '');
+            let bigint = parseInt(hex, 16);
+            let r = (bigint >> 16) & 255;
+            let g = (bigint >> 8) & 255;
+            let b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
+        }
     </script>
     <script>
-    // ... (your existing code)
-
-    document.addEventListener('keydown', function (event) {
-        if (event.key === ',') {
-            // Previous frame
-            prevFrame();
-        } else if (event.key === '.') {
-            // Next frame
-            nextFrame();
-        }
-    });
-
-    function prevFrame() {
-        if (currentFrame > 0) {
-            currentFrame--;
-            drawFrame();
-        }
-    }
-
-    function nextFrame() {
-        if (currentFrame < frames.length - 1) {
-            currentFrame++;
-            drawFrame();
-        }
-    }
-
-    // ... (your existing code)
-</script>
+    // Additional script if any
+    </script>
 
 </body>
 </html>
